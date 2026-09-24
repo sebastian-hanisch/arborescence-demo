@@ -1,5 +1,7 @@
 # Gerichteter Spannbaum – die Arboreszenz (Chu-Liu/Edmonds) – Streamlit-Demo
 
+**[→ Demo live ausprobieren](https://sebastianhanisch-arborescence-demo.streamlit.app/)**
+
 Fünftes Stück der **Spannbaum-Reihe** der "Konzepte"-Reihe für die Website "Sebastian Hanisch – Operations Research und Machine Learning". Bisher waren alle Kosten symmetrisch. Hat eine Leitung **Fließrichtung** - bergauf wird Pumpenergie fällig, bergab nicht, manche Trassen sind Einbahnen -, dann zählt jeder **Bogen** einzeln: gesucht ist der billigste **Verteilbaum ab einer Wurzel** (dem Werk), in dem jeder andere Standort genau **einen Zulauf** hat und alle vom Werk aus erreichbar sind, eine **minimale Arboreszenz**. Kruskal und Prim sind für ungerichtete Kanten gebaut und liefern hier nicht mehr das Optimum, oft gar keinen Baum. Der richtige Algorithmus ist **Chu-Liu/Edmonds**: je Knoten den billigsten Zulauf wählen; bilden diese Kreise, den Kreis zu einem Superknoten **kontrahieren**, die Kosten der Bögen in ihn um den Kreisbogen senken und von vorn beginnen, am Ende rückwärts expandieren. Die Demo misst, **was das Ignorieren der Richtung kostet**, wie oft und wie tief die Kontraktion nötig ist, was **Einbahn-Trassen** anrichten und was die **freie Wurzel** spart. Kruskal und Prim aus [kruskal-demo](../kruskal-demo) und [prim-demo](../prim-demo) laufen als naive Vergleichsverfahren mit.
 
 **Einordnung in die Reihe:** geplant sind elf Stücke, dies ist das fünfte:
