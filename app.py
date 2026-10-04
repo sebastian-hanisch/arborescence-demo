@@ -77,7 +77,7 @@ st.markdown(
     """
 **Fünftes Stück der Spannbaum-Reihe.** Bisher waren alle Kosten symmetrisch. Hat eine Leitung **Fließrichtung** - bergauf wird Pumpenergie fällig, bergab nicht, manche Trassen sind Einbahnen -, dann zählt jeder
 **Bogen** einzeln: gesucht ist der billigste **Verteilbaum ab einer Wurzel** (dem Werk), in dem jeder andere Standort genau **einen Zulauf** hat und alle vom Werk aus erreichbar sind - eine **minimale Arboreszenz**.
-Kruskal und Prim sind für ungerichtete Kanten gebaut und liefern hier nicht mehr das Optimum, oft gar keinen Baum.
+Kruskal und Prim sind für ungerichtete Kanten gebaut und liefern hier nicht mehr das Optimum, Kruskal oft gar keinen Baum.
 
 Der richtige Algorithmus ist **Chu-Liu/Edmonds**: je Knoten den billigsten Zulauf wählen; bilden diese Zuläufe **Kreise**, den Kreis zu einem Superknoten **kontrahieren**, die Kosten der Bögen in ihn um den Kreisbogen
 senken und von vorn beginnen; am Ende rückwärts expandieren. Hier wird gemessen, **was das Ignorieren der Richtung kostet**, wie oft und wie tief die Kontraktion nötig ist, was **Einbahn-Trassen** anrichten und was
@@ -86,7 +86,7 @@ die **freie Wurzel** spart. Aufwand in Elementarschritten, nicht in Laufzeit.
 )
 st.caption(
     "Setzt auf [kruskal-demo](https://github.com/sebastian-hanisch/kruskal-demo) und [prim-demo](https://github.com/sebastian-hanisch/prim-demo) auf (Kruskal läuft als die naive Antwort mit). "
-    "Geplante Nachfolger (nicht gebaut): Grad-/Hop-beschränkter und Kapazitierter MST, Steiner-Baum, Prize-Collecting Steiner-Baum, Sensitivität, zufällige Spannbäume."
+    "Weitere Stücke der Reihe (alle gebaut): [constrained-mst-demo](https://github.com/sebastian-hanisch/constrained-mst-demo) (Bottleneck-/Grad-/Hop-beschränkt), [cmst-demo](https://github.com/sebastian-hanisch/cmst-demo) (Kapazitierter MST), [steiner-tree-demo](https://github.com/sebastian-hanisch/steiner-tree-demo), [pcst-demo](https://github.com/sebastian-hanisch/pcst-demo) (Prize-Collecting Steiner-Baum), [mst-sensitivity-demo](https://github.com/sebastian-hanisch/mst-sensitivity-demo), [random-spanning-tree-demo](https://github.com/sebastian-hanisch/random-spanning-tree-demo)."
 )
 
 with st.expander("So funktioniert Chu-Liu/Edmonds", expanded=True):
@@ -199,7 +199,7 @@ else:
     else:
         st.warning(f"**{METHOD_LABELS[tree_name]} liefert hier keinen Baum:** {a.trees[tree_name].reason}. Das Optimum ({opt.cost:.2f}) findet Chu-Liu/Edmonds trotzdem.")
     st.plotly_chart(build_gap_bars({"optimum": opt.cost, **{m: (a.trees[m].cost if a.trees[m].valid else None) for m in METHODS}}, opt.cost), width="stretch", key="gap_bars")
-    st.caption("Mehrkosten gegen das Optimum. Der Kürzeste-Wege-Baum minimiert jeden einzelnen Weg zum Werk, nicht die Summe der Bogenkosten.")
+    st.caption("Mehrkosten gegen das Optimum. Der Kürzeste-Wege-Baum minimiert jeden einzelnen Weg vom Werk, nicht die Summe der Bogenkosten.")
 
 st.markdown("---")
 
@@ -295,7 +295,7 @@ st.markdown(
 | **Wenige Ebenen** | Die Ebenen wachsen mit n (n = 10/20/40/80/120: 4/6/10/18/17) und im Worst Case auf n − 1 mit quadratisch vielen Schritten (n = 80: 15 641). Diese Umsetzung ist O(n·m). | Tarjan 1977, Gabow u. a. 1986 (nicht gebaut) |
 | **Elementarschritte sind Laufzeit** | Nein. Sie zählen Bogenprüfungen und Zeigerschritte einheitlich, ignorieren aber, was sie in einer Sprache kosten. Die Heuristiken werden nur nach Kosten verglichen. | Laufzeitmessung an echten Netzen (nicht gebaut) |
 | **Die Wurzel steht fest** | Mit freier Wurzel spart der beste Standort im Median 1.69 % (n = 30, α = 0.5), bei α = 3 sogar 8.60 %, bei α = 0 nichts (symmetrisch); dafür läuft der Algorithmus n-mal. Ein Wald ohne feste Wurzel (Branching) ist nicht gebaut. | Minimum Branching (nicht gebaut) |
-| **Synthetisches Modell** | Steigungsaufschlag und Einbahnen sind ein Modell (Punkte im Quadrat, drei Gauß-Hügel, k nächste Nachbarn); keine Kapazitäten, keine echten Rohrnetze. | Echte Trassen, Kapazitierter MST (nicht gebaut) |
+| **Synthetisches Modell** | Steigungsaufschlag und Einbahnen sind ein Modell (Punkte im Quadrat, drei Gauß-Hügel, k nächste Nachbarn); keine Kapazitäten, keine echten Rohrnetze. | Echte Trassen (nicht gebaut); Kapazitierter MST: cmst-demo |
 """
 )
 
@@ -326,6 +326,6 @@ Implementiert in `arb_algorithm.py` (`chu_liu_edmonds`, Vergleichsverfahren), `a
 st.markdown("---")
 st.caption(
     "Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – "
-    "Operations Research und Machine Learning. Interesse an einer maßgeschneiderten Lösung für "
-    "Ihr Unternehmen? [Kontakt aufnehmen](https://sebastianhanisch.net/kontakt.html)"
+    "Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). "
+    "Mehr zur Reihe: [Spannbäume: vom Kruskal bis zum Zufallsbaum](https://sebastianhanisch.net/konzepte-spannbaum.html)."
 )

@@ -2,9 +2,9 @@
 
 **[→ Demo live ausprobieren](https://sebastianhanisch-arborescence-demo.streamlit.app/)**
 
-Fünftes Stück der **Spannbaum-Reihe** der "Konzepte"-Reihe für die Website "Sebastian Hanisch – Operations Research und Machine Learning". Bisher waren alle Kosten symmetrisch. Hat eine Leitung **Fließrichtung** - bergauf wird Pumpenergie fällig, bergab nicht, manche Trassen sind Einbahnen -, dann zählt jeder **Bogen** einzeln: gesucht ist der billigste **Verteilbaum ab einer Wurzel** (dem Werk), in dem jeder andere Standort genau **einen Zulauf** hat und alle vom Werk aus erreichbar sind, eine **minimale Arboreszenz**. Kruskal und Prim sind für ungerichtete Kanten gebaut und liefern hier nicht mehr das Optimum, oft gar keinen Baum. Der richtige Algorithmus ist **Chu-Liu/Edmonds**: je Knoten den billigsten Zulauf wählen; bilden diese Kreise, den Kreis zu einem Superknoten **kontrahieren**, die Kosten der Bögen in ihn um den Kreisbogen senken und von vorn beginnen, am Ende rückwärts expandieren. Die Demo misst, **was das Ignorieren der Richtung kostet**, wie oft und wie tief die Kontraktion nötig ist, was **Einbahn-Trassen** anrichten und was die **freie Wurzel** spart. Kruskal und Prim aus [kruskal-demo](../kruskal-demo) und [prim-demo](../prim-demo) laufen als naive Vergleichsverfahren mit.
+Fünftes Stück der **Spannbaum-Reihe** der "Konzepte"-Reihe für die Website "Sebastian Hanisch – Operations Research und Machine Learning". Bisher waren alle Kosten symmetrisch. Hat eine Leitung **Fließrichtung** - bergauf wird Pumpenergie fällig, bergab nicht, manche Trassen sind Einbahnen -, dann zählt jeder **Bogen** einzeln: gesucht ist der billigste **Verteilbaum ab einer Wurzel** (dem Werk), in dem jeder andere Standort genau **einen Zulauf** hat und alle vom Werk aus erreichbar sind, eine **minimale Arboreszenz**. Kruskal und Prim sind für ungerichtete Kanten gebaut und liefern hier nicht mehr das Optimum, Kruskal oft gar keinen Baum. Der richtige Algorithmus ist **Chu-Liu/Edmonds**: je Knoten den billigsten Zulauf wählen; bilden diese Kreise, den Kreis zu einem Superknoten **kontrahieren**, die Kosten der Bögen in ihn um den Kreisbogen senken und von vorn beginnen, am Ende rückwärts expandieren. Die Demo misst, **was das Ignorieren der Richtung kostet**, wie oft und wie tief die Kontraktion nötig ist, was **Einbahn-Trassen** anrichten und was die **freie Wurzel** spart. Kruskal und Prim aus [kruskal-demo](../kruskal-demo) und [prim-demo](../prim-demo) laufen als naive Vergleichsverfahren mit.
 
-**Einordnung in die Reihe:** geplant sind elf Stücke, dies ist das fünfte:
+**Einordnung in die Reihe:** die Reihe hat elf Stücke, dies ist das fünfte:
 
 ```
 Kruskal (Wurzel)                                                                           [gebaut: kruskal-demo]
@@ -12,10 +12,10 @@ Kruskal (Wurzel)                                                                
  ├─ Borůvka (Kontrast: alle Komponenten parallel)                                          [gebaut: boruvka-demo]
  ├─ Euklidischer MST (keine n²-Kantenliste, Delaunay)                                      [gebaut: euclidean-mst-demo]
  ├─ Gerichteter Spannbaum (Chu-Liu/Edmonds)                                                [DIESES STÜCK]
- ├─ Bottleneck-/Grad-/Hop-beschränkter Spannbaum → Kapazitierter MST                       [nicht gebaut]
- ├─ Steiner-Baum → Prize-Collecting Steiner-Baum                                           [nicht gebaut]
- ├─ MST-Sensitivität & dynamischer MST                                                     [nicht gebaut]
- └─ Zufällige Spannbäume & Kirchhoff                                                       [nicht gebaut]
+ ├─ Bottleneck-/Grad-/Hop-beschränkter Spannbaum → Kapazitierter MST                       [gebaut: constrained-mst-demo, cmst-demo]
+ ├─ Steiner-Baum → Prize-Collecting Steiner-Baum                                           [gebaut: steiner-tree-demo, pcst-demo]
+ ├─ MST-Sensitivität & dynamischer MST                                                     [gebaut: mst-sensitivity-demo]
+ └─ Zufällige Spannbäume & Kirchhoff                                                       [gebaut: random-spanning-tree-demo]
 ```
 
 Ergebnis in Kürze: **Die Richtung zu ignorieren kostet erst bei starker Steigung viel (5,8 % bei α = 3), Einbahn-Trassen brechen die naive Antwort aber sofort (ab 10 % Einbahn-Anteil in 80 % der Instanzen kein gültiger Baum); der billigste Zulauf je Knoten enthält immer Kreise, die Kontraktion wächst mit n, und im Worst Case braucht der Algorithmus n − 1 Ebenen.** Das Optimum ist bewiesen (Brute-Force, networkx, Dualwert = Baumkosten). Der Kürzeste-Wege-Baum ist keine Alternative: er ist 70 bis 87 % teurer, weil er jeden einzelnen Weg statt der Summe minimiert.
@@ -71,7 +71,6 @@ Das **Lehrbuchbeispiel** ist von Hand nachzurechnen: Schritt 1 wählt für B, C,
 - **Erwartung "Kruskal/Prim liefern ungültige Bäume" - nur mit Einbahnen wahr:** bei symmetrischen und gerichteten Kosten mit beiden Richtungen liefert die orientierte Antwort immer einen gültigen (nur teureren) Baum; erst fehlende Richtungen machen sie ungültig. Gerichtetes Prim ist immer gültig (aber bei starker Steigung teurer als die orientierte Kruskal-Antwort: 11,6 % gegen 5,79 % bei α = 3).
 - **Elementarschritte sind keine Laufzeit:** die schnelleren Umsetzungen sind nicht gebaut; die Heuristiken werden nur nach Kosten verglichen, nicht nach Schritten.
 - **Synthetisches Modell:** Steigungsaufschlag und Einbahnen sind ein Modell (Punkte im Quadrat, drei Gauß-Hügel, k nächste Nachbarn); keine Kapazitäten, keine echten Rohrnetze. Die Wurzelwahl nutzt n Läufe; ein Wald ohne feste Wurzel (Minimum Branching) ist nicht gebaut.
-- **Nicht gebaut:** Grad-/Hop-beschränkter und Kapazitierter MST, Steiner-Bäume, Sensitivität, zufällige Spannbäume.
 
 ## Verifikation
 
@@ -115,6 +114,4 @@ pytest tests/ -v
 
 ---
 
-Teil des [Operations-Research-Demo-Portfolios](https://sebastianhanisch.net/demos.html) von
-[Sebastian Hanisch](https://sebastianhanisch.net) – Operations Research und Machine Learning.
-Interesse an einer maßgeschneiderten Lösung? [Kontakt aufnehmen](https://sebastianhanisch.net/kontakt.html).
+Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). Mehr zur Reihe: [Spannbäume: vom Kruskal bis zum Zufallsbaum](https://sebastianhanisch.net/konzepte-spannbaum.html).
